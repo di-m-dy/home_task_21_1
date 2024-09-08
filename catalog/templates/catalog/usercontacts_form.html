@@ -1,0 +1,54 @@
+{% extends "catalog/base.html" %}
+{% block title %}Contacts{% endblock %}
+{% block content %}
+<main>
+    {% include 'catalog/includes/navbar_include.html' %}
+    <div class="container my-2">
+        <div class="bg-body-tertiary p-4 rounded">
+            <div class="col-sm-8 py-4 mx-auto">
+                <h2 class="display-5 fw-medium">Contacts</h2>
+                <div class="my-4">
+                    {% for contact in contacts %}
+                    <p>{{ contact.name }}: <strong>{{ contact.link }}</strong></p>
+                    {% endfor %}
+                </div>
+                <div class="accordion accordion-flush py-4" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                    aria-controls="flush-collapseOne">
+                                Свяжитесь со мной
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse"
+                             data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label for="first_name" class="form-label">Имя</label>
+                                        <input type="text" class="form-control" id="first_name"
+                                               aria-describedby="emailHelp" name="first_name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="last_name" class="form-label">Фамилия</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name"
+                                               aria-describedby="emailHelp" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                               aria-describedby="emailHelp" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Отправить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

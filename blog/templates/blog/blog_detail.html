@@ -1,0 +1,45 @@
+{% extends "catalog/base.html" %}
+{% load my_tags %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<main>
+    {% include 'catalog/includes/navbar_include.html' %}
+    <div class="container my-2">
+        {% include 'blog/includes/header_blog.html' %}
+        <div class="my-2">
+            <div class="card mb-3" style="max-width: 100em;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{% mymedia object.image %}" class="img-fluid rounded-start"
+                             alt="image for {{ object.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="my-4">
+                                <a href="{% url 'blog:update_post' object.id %}" type="button" class="btn btn-warning">Редактировать</a>
+                            </div>
+                            <div class="my-4">
+                                {% if object.is_active %}
+                                <h3>{{ object.title }} <span class="badge text-bg-success">active</span></h3>
+                                {% else %}
+                                <h3>{{ object.title }} <span class="badge text-bg-danger">hidden</span></h3>
+                                {% endif %}
+                            </div>
+                            <div>{{ object.text }}</div>
+                            <div class="my-4">
+                                <p class="card-text">
+                                    <small class="text-body-secondary">Просмотры: {{ object.views_count }}</small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-body-secondary">Дата публикации: {{ object.created_at }}</small>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

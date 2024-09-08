@@ -1,0 +1,29 @@
+{% extends "catalog/base.html" %}
+{% block title %}Add Post{% endblock %}
+{% block content %}
+<main>
+    {% include 'catalog/includes/navbar_include.html' %}
+    <div class="container my-2">
+        <div class="bg-body-tertiary p-4 rounded">
+            <div class="container my-3 col-8">
+                <form class="row g-3" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if object %}
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 mt-4 mb-2">Cохранить</button>
+                    </div>
+                    {% else %}
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 mt-4 mb-2">Создать</button>
+                    </div>
+                    {% endif %}
+                </form>
+                <div class="col-12">
+                    <a class="btn btn-secondary w-100" href="{% url 'blog:index' %}">Отмена</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

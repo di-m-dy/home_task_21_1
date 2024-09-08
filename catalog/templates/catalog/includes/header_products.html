@@ -1,0 +1,12 @@
+<div class="bg-body-tertiary p-4 rounded">
+    <div class="col-sm-8 py-4 mx-auto">
+        <h1 class="display-5 fw-medium">Local Farmers Store</h1>
+        {% if category %}
+        <p class="fs-5">Продукты категории: {{ category.name }}</p>
+        <p>{{ category.description }}</p>
+        {% else %}
+        <p class="fs-5">Все продукты</p>
+        <p>Продукты из всех категорий</p>
+        {% endif %}
+    </div>
+</div>

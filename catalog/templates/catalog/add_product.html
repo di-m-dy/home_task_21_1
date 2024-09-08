@@ -1,0 +1,54 @@
+{% extends "catalog/base.html" %}
+{% block title %}Contacts{% endblock %}
+{% block content %}
+<main>
+    {% include 'catalog/includes/navbar_include.html' %}
+    <div class="container my-2">
+        {% if warning_text %}
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                {{ warning_text }}
+            </div>
+        </div>
+        {% endif %}
+        <div class="bg-body-tertiary p-4 rounded">
+            <div class="container my-3">
+                <form class="row g-3" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-md-12">
+                        <label for="selectCategory" class="form-label">Выбрать категорию</label>
+                        <select class="form-select" aria-label="Выбор категории" id="selectCategory" name="category">
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputProductName" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="inputProductName" name="product_name" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="formPhoto" class="form-label">Загрузите фотографии продукта</label>
+                        <input class="form-control" name="product_image" type="file" id="formPhoto" multiple>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="textareaDescription" class="form-label">Описание</label>
+                        <textarea class="form-control" id="textareaDescription" rows="6" name="product_description"
+                                  required></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputPriceFrom" class="form-label">Цена</label>
+                        <input type="text" class="form-control" id="inputPriceFrom" name="product_price" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 mt-4 mb-2">Добавить</button>
+                    </div>
+                </form>
+                <div class="col-12">
+                    <a class="btn btn-secondary w-100" href="{% url 'index' %}">Отмена</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
