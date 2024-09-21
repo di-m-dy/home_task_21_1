@@ -6,7 +6,10 @@ from catalog.views import (
     ProductDetailView,
     ProductListView,
     AddProductCreateView,
-    SuccessAddProductDetailView
+    SuccessAddProductDetailView,
+    ProductDeleteView,
+    ProductUpdateView,
+    SuccessDeleteTemplateView
 )
 
 app_name = 'catalog'
@@ -17,6 +20,9 @@ urlpatterns = [
     path('product/<int:pk>', ProductDetailView.as_view(), name="product"),
     path('products/', ProductListView.as_view(), name="products"),
     path('add_product/', AddProductCreateView.as_view(), name="add_product"),
+    path('product/<int:pk>/delete', ProductDeleteView.as_view(), name='delete_product'),
+    path('product/<int:pk>/update', ProductUpdateView.as_view(), name='update_product'),
+    path('success_delete_product/<int:pk>/', SuccessDeleteTemplateView.as_view(), name='success_delete_product'),
     path('success_adding_product/<int:pk>/', SuccessAddProductDetailView.as_view(), name="success_adding_product"),
     path('thanx/<int:pk>/', ThanxDetailView.as_view(), name='thanx')
 ]

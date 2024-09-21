@@ -1,0 +1,16 @@
+{% extends "catalog/base.html" %}
+{% block title %}Success adding product{% endblock %}
+{% block content %}
+<main>
+    {% include 'catalog/includes/navbar_include.html' %}
+    <div class="container my-2">
+        <div class="bg-body-tertiary p-4 rounded">
+            <div class="col-sm-8 py-4 mx-auto">
+                <h2 class="display-5 fw-medium">Продукт удален</h2>
+                <a href="{% url 'catalog:index' %}" type="button" class="btn btn-primary">Вернуться на главную страницу</a>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

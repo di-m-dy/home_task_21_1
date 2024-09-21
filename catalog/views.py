@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
+from catalog.forms import ProductForm
 from catalog.models import Category, Product, StoreContacts, UserContacts
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
 
 class IndexListView(ListView):
@@ -74,28 +75,29 @@ class ProductDetailView(DetailView):
 
 class AddProductCreateView(CreateView):
     model = Product
-    warning_text = None
     template_name = 'catalog/product_form.html'
-    fields = ('name', 'category', 'description', 'image', 'price')
-    extra_context = {
-        'categories': Category.objects.all(),
-        'warning_text': warning_text
-    }
-
-    def form_invalid(self, form):
-        if not form.is_valid():
-            errors = form.errors
-            self.warning_text = [(field, error_list) for field, error_list in errors.items()]
-            return render(
-                self.request,
-                self.template_name,
-                {'warning_text': self.warning_text, 'categories': Category.objects.all()}
-            )
-        return super().form_invalid(form)
+    form_class = ProductForm
 
     def get_success_url(self):
-        new_user_id = self.get_context_data()['object'].id
-        return reverse('catalog:success_adding_product', args=[new_user_id])
+        new_product_id = self.get_context_data()['object'].id
+        return reverse('catalog:success_adding_product', args=[new_product_id])
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:products')
+
+
+class SuccessDeleteTemplateView(TemplateView):
+    template_name = 'catalog/success_delete_product.html'
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+
+    def get_success_url(self):
+        return reverse('catalog:product', args=[self.kwargs.get('pk')])
 
 
 class SuccessAddProductDetailView(DetailView):
