@@ -8,7 +8,7 @@
         {% include 'catalog/includes/header_products.html' %}
         <div class="m-4 text-center">
             <nav aria-label="Category navigation">
-                <ul class="pagination">
+                <ul class="pagination pagination-sm justify-content-center">
                     {% if category %}
                     <li class="page-item"><a class="page-link" href="{% url 'catalog:products' %}">Все продукты</a></li>
                     {% for item in categories %}
@@ -28,7 +28,7 @@
                 </ul>
             </nav>
         </div>
-        <div class="row m-4">
+        <div class="row m-4 sm justify-content-center">
             {% for product in object_list %}
             <div class="p-2 rounded col-4">
                 <div class="card m-4">

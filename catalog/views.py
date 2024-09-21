@@ -12,7 +12,7 @@ class IndexListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        data = super().get_queryset()
+        data = super().get_queryset().order_by('-created_at')
         return data[:3]
 
 
@@ -48,9 +48,9 @@ class ProductListView(ListView):
         чтобы динамически фильтровать вывод товара по категориям
         """
         category_id = self.request.GET.get('category_id')
-        data = super().get_queryset()
+        data = super().get_queryset().order_by('-created_at')
         if category_id:
-            data = data.filter(category_id=category_id)
+            data = data.filter(category_id=category_id).order_by('-created_at')
 
         return data
 
