@@ -13,7 +13,7 @@ class IndexListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        data = super().get_queryset().filter(version__is_current=True).order_by('-created_at')
+        data = super().get_queryset().order_by('-created_at')
         return data[:3]
 
 
@@ -50,10 +50,9 @@ class ProductListView(ListView):
         """
 
         category_id = self.request.GET.get('category_id')
-        data = super().get_queryset().filter(version__is_current=True).order_by('-created_at')
+        data = super().get_queryset().order_by('-created_at')
         if category_id:
-            data = data.filter(version__is_current=True).filter(category_id=category_id).order_by('-created_at')
-
+            data = data.filter(category_id=category_id).order_by('-created_at')
         return data
 
     def get_context_data(self, **kwargs):
@@ -65,6 +64,7 @@ class ProductListView(ListView):
         """
         category_id = self.request.GET.get('category_id')
         data = super().get_context_data()
+        data['object_list'] = [{'product': item, 'version': item.version_set.filter(is_current=True).first()} for item in data['object_list']]
         categories = Category.objects.all()
         data['categories'] = categories
         data['category'] = get_object_or_404(Category, id=category_id) if category_id else None

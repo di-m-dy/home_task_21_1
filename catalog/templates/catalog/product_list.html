@@ -16,33 +16,45 @@
                     <li class="page-item active"><a class="page-link"
                                                     href="{% url 'catalog:products' %}?category_id={{ item.id }}">{{ item.name }}</a></li>
                     {% else %}
-                    <li class="page-item"><a class="page-link" href="{% url 'catalog:products' %}?category_id={{ item.id }}">{{ item.name }}</a></li>
+                    <li class="page-item"><a class="page-link"
+                                             href="{% url 'catalog:products' %}?category_id={{ item.id }}">{{ item.name }}</a></li>
                     {% endif %}
                     {% endfor %}
                     {% else %}
-                    <li class="page-item active"><a class="page-link" href="{% url 'catalog:products' %}">Все продукты</a></li>
+                    <li class="page-item active"><a class="page-link" href="{% url 'catalog:products' %}">Все
+                        продукты</a></li>
                     {% for item in categories %}
-                    <li class="page-item"><a class="page-link" href="{% url 'catalog:products' %}?category_id={{ item.id }}">{{ item.name }}</a></li>
+                    <li class="page-item"><a class="page-link"
+                                             href="{% url 'catalog:products' %}?category_id={{ item.id }}">{{ item.name }}</a></li>
                     {% endfor %}
                     {% endif %}
                 </ul>
             </nav>
         </div>
         <div class="row m-4 sm justify-content-center">
-            {% for product in object_list %}
+            {% for item in object_list %}
             <div class="p-2 rounded col-4">
                 <div class="card m-4">
-                    <img src="{% mymedia product.image %}" class="card-img-top" alt="no_image">
+                    <img src="{% mymedia item.product.image %}" class="card-img-top" alt="no_image">
                     <div class="card-body">
-                        <h5>{{ product.name }}</h5>
-                        <h1>{{ product.price }} руб.</h1>
-                        <p class="card-text">{{ product.description|slice:99 }}...</p>
-                        <a href="{% url 'catalog:product' product.id %}" type="button" class="btn btn-primary">Открыть</a>
+                        <h5>{{ item.product.name }}</h5>
+                        <h1>{{ item.product.price }} руб.</h1>
+                        <p class="card-text">{{ item.product.description|slice:99 }}...</p>
+                        <a href="{% url 'catalog:product' item.product.id %}" type="button"
+                           class="btn btn-primary">Открыть</a>
                     </div>
+                    {% if item.version %}
+                    <div class="card-footer">
+                        <p class="card-text text-tertiary"><small>{{ item.version }}</small></p>
+                    </div>
+                    {% else %}
+                    <div class="card-footer">
+                        <p class="card-text text-secondary"><small>Не имеет текущей версии</small></p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
-        </div>
         </div>
     </div>
 </main>

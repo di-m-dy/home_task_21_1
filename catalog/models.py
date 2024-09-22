@@ -87,13 +87,13 @@ class Version(models.Model):
     """
     Модель для хранения версий продукта
     """
-    product = models.ForeignKey(Product, verbose_name='Название продукта', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name='Название продукта', on_delete=models.CASCADE, related_query_name='versions')
     count = models.PositiveIntegerField(verbose_name='Номер версии', default=1)
     version_name = models.CharField(max_length=255, verbose_name='Название версии')
     is_current = models.BooleanField(verbose_name='Признак текущей версии', default=True)
 
     def __str__(self):
-        return f"Version#{self.count}: {self.version_name}: {self.product}"
+        return f"version#{self.count}: {self.version_name}"
 
     class Meta:
         verbose_name = "версия продукта"
