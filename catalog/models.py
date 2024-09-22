@@ -81,3 +81,20 @@ class UserContacts(models.Model):
     class Meta:
         verbose_name = 'контакт пользователя'
         verbose_name_plural = 'контакты пользователя'
+
+
+class Version(models.Model):
+    """
+    Модель для хранения версий продукта
+    """
+    product = models.ForeignKey(Product, verbose_name='Название продукта', on_delete=models.CASCADE)
+    count = models.PositiveIntegerField(verbose_name='Номер версии', default=1)
+    version_name = models.CharField(max_length=255, verbose_name='Название версии')
+    is_current = models.BooleanField(verbose_name='Признак текущей версии', default=True)
+
+    def __str__(self):
+        return f"Version#{self.count}: {self.version_name}: {self.product}"
+
+    class Meta:
+        verbose_name = "версия продукта"
+        verbose_name_plural = "версии продукта"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from catalog.models import Category, Product, StoreContacts, UserContacts
+from catalog.models import Category, Product, StoreContacts, UserContacts, Version
 
 
 # Register your models here.
@@ -19,6 +19,16 @@ class UserContactsAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'email'
+    ]
+
+
+@admin.register(Version)
+class VersionAdmin(admin.ModelAdmin):
+    list_display = [
+        'product',
+        'count',
+        'version_name',
+        'is_current'
     ]
 
 

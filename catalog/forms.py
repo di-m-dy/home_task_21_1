@@ -1,16 +1,21 @@
 from django import forms
-from catalog.models import Product
+from catalog.models import Product, Version
 
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ('name', 'category', 'description', 'price', 'image', )
-
+class FormControlMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            if isinstance(field, forms.BooleanField):
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+
+
+class ProductForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('name', 'category', 'description', 'price', 'image',)
 
     def clean(self):
         """
@@ -27,7 +32,6 @@ class ProductForm(forms.ModelForm):
             'полиция',
             'радар'
         )
-
         data = self.cleaned_data
         name = data['name']
         description = data['description']
@@ -41,3 +45,8 @@ class ProductForm(forms.ModelForm):
 
         return data
 
+
+class VersionForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Version
+        fields = '__all__'

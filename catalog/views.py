@@ -1,8 +1,9 @@
+from django.forms import inlineformset_factory, ValidationError
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 
-from catalog.forms import ProductForm
-from catalog.models import Category, Product, StoreContacts, UserContacts
+from catalog.forms import ProductForm, VersionForm
+from catalog.models import Category, Product, StoreContacts, UserContacts, Version
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
 
@@ -12,7 +13,7 @@ class IndexListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        data = super().get_queryset().order_by('-created_at')
+        data = super().get_queryset().filter(version__is_current=True).order_by('-created_at')
         return data[:3]
 
 
@@ -47,10 +48,11 @@ class ProductListView(ListView):
         Переопределение метода запроса
         чтобы динамически фильтровать вывод товара по категориям
         """
+
         category_id = self.request.GET.get('category_id')
-        data = super().get_queryset().order_by('-created_at')
+        data = super().get_queryset().filter(version__is_current=True).order_by('-created_at')
         if category_id:
-            data = data.filter(category_id=category_id).order_by('-created_at')
+            data = data.filter(version__is_current=True).filter(category_id=category_id).order_by('-created_at')
 
         return data
 
@@ -82,6 +84,38 @@ class AddProductCreateView(CreateView):
         new_product_id = self.get_context_data()['object'].id
         return reverse('catalog:success_adding_product', args=[new_product_id])
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        if self.request.method == 'POST':
+            data['formset'] = VersionFormset(self.request.POST)
+        else:
+            data['formset'] = VersionFormset()
+        return data
+
+    def form_valid(self, form):
+        """
+        Валидация
+        Проверка на несколько текущих версий
+        """
+        formset = self.get_context_data()['formset']
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            check_update = [instance for instance in instances]
+            for item in formset.queryset:
+                if item not in check_update:
+                    check_update.append(item)
+            check_current = [item for item in check_update if item.is_current]
+            if len(check_current) > 1:
+                form.add_error(None, "Может быть только одна версия!")
+                return self.form_invalid(form)
+            else:
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+                return super().form_valid(form)
+        return super().form_invalid(form)
+
 
 class ProductDeleteView(DeleteView):
     model = Product
@@ -98,6 +132,37 @@ class ProductUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('catalog:product', args=[self.kwargs.get('pk')])
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        if self.request.method == 'POST':
+            data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            data['formset'] = VersionFormset(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        """
+        Валидация
+        Проверка на несколько текущих версий
+        """
+        formset = self.get_context_data()['formset']
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            check_update = [instance for instance in instances]
+            for item in formset.queryset:
+                if item not in check_update:
+                    check_update.append(item)
+            check_current = [item for item in check_update if item.is_current]
+            if len(check_current) > 1:
+                form.add_error(None, "Может быть только одна версия!")
+                return self.form_invalid(form)
+            else:
+                formset.instance = self.object
+                formset.save()
+                return super().form_valid(form)
+        return super().form_invalid(form)
 
 
 class SuccessAddProductDetailView(DetailView):
