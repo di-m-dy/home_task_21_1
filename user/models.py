@@ -14,11 +14,13 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, verbose_name='Имя', null=True, blank=True)
     last_name = models.CharField(max_length=50, verbose_name='Имя', null=True, blank=True)
     phone = models.CharField(max_length=20, verbose_name='Телефон', null=True, blank=True)
+    avatar = models.ImageField(verbose_name='Аватар Пользователя', null=True, blank=True)
     country = models.CharField(max_length=100, verbose_name='Страна', null=True, blank=True)
+    token = models.CharField(max_length=100, verbose_name='Токен верификации', null=True, blank=True)
 
     def __str__(self):
         return f"{self.email}"
 
     class Meta:
         verbose_name = 'пользователь'
-        verbose_plural_name = 'пользователи'
+        verbose_name_plural = 'пользователи'
