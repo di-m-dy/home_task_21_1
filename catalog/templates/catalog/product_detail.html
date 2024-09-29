@@ -6,10 +6,12 @@
     {% include 'catalog/includes/navbar_include.html' %}
     <div class="container my-2">
         {% include 'catalog/includes/header_product.html' %}
+        {% if object.user == user %}
         <div class="btn-group btn-group-sm mt-2" role="group" aria-label="Basic mixed styles example">
             <a href="{% url 'catalog:delete_product' object.pk %}" type="button" class="btn btn-danger">Удалить</a>
             <a href="{% url 'catalog:update_product' object.pk %}" type="button" class="btn btn-secondary">Редактировать</a>
         </div>
+        {% endif %}
         <div class="my-2">
             <div class="card mb-3" style="max-width: 100em;">
                 <div class="row g-0">
@@ -22,6 +24,7 @@
                             <span class="badge text-bg-secondary">{{ object.category.name }}</span>
                             <h3 class="card-title my-2">{{ object.name }}</h3>
                             <h1 class="card-title my-4">{{ object.price }} руб.</h1>
+                            <div><strong>Пользователь:</strong> {{ object.user }}</div>
                             <div><strong>Описание:</strong> {{ object.description }}</div>
                             <p class="card-text">
                                 <small class="text-body-secondary">добавлен: {{ object.created_at }}</small>

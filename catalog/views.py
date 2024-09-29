@@ -1,7 +1,7 @@
 from django.forms import inlineformset_factory, ValidationError
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Category, Product, StoreContacts, UserContacts, Version
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
@@ -75,7 +75,8 @@ class ProductDetailView(DetailView):
     model = Product
 
 
-class AddProductCreateView(CreateView):
+class AddProductCreateView(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('user:login')
     model = Product
     template_name = 'catalog/product_form.html'
     form_class = ProductForm
@@ -110,14 +111,16 @@ class AddProductCreateView(CreateView):
                 form.add_error(None, "Может быть только одна версия!")
                 return self.form_invalid(form)
             else:
+                form.instance.user = self.request.user
                 self.object = form.save()
                 formset.instance = self.object
-                formset.save()
+                product = formset.save()
                 return super().form_valid(form)
         return super().form_invalid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('user:login')
     model = Product
     success_url = reverse_lazy('catalog:products')
 
@@ -126,7 +129,8 @@ class SuccessDeleteTemplateView(TemplateView):
     template_name = 'catalog/success_delete_product.html'
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('user:login')
     model = Product
     form_class = ProductForm
 

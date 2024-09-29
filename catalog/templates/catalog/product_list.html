@@ -39,6 +39,7 @@
                     <div class="card-body">
                         <h5>{{ item.product.name }}</h5>
                         <h1>{{ item.product.price }} руб.</h1>
+                        <p class="card-text text-secondary"><small>пользователь: {{ item.product.user }}</small></p>
                         <p class="card-text">{{ item.product.description|slice:99 }}...</p>
                         <a href="{% url 'catalog:product' item.product.id %}" type="button"
                            class="btn btn-primary">Открыть</a>

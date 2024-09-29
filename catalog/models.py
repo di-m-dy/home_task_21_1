@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 
 # Create your models here.
@@ -32,6 +33,7 @@ class Product(models.Model):
         updated_at - Дата последнего изменения (записи в БД)
     """
     name = models.CharField(max_length=100, verbose_name='Наименование')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, verbose_name='Описание')
     image = models.ImageField(upload_to='product_image', verbose_name='Изображение')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')

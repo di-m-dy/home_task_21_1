@@ -6,9 +6,9 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
 
 from config.settings import EMAIL_HOST_USER
-from user.forms import UserRegisterForm
+from user.forms import UserRegisterForm, ProfileForm
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from user.models import User
 
@@ -34,6 +34,17 @@ class RegisterCreateView(CreateView):
             recipient_list=[user.email]
         )
         return super().form_valid(form)
+
+
+class ProfileUpdateView(UpdateView):
+    model = User
+    context_object_name = 'user'
+    success_url = reverse_lazy('catalog:index')
+    template_name = 'user/profile.html'
+    form_class = ProfileForm
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 def email_verification(request, token):
