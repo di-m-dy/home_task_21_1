@@ -1,5 +1,5 @@
-from django.forms import inlineformset_factory, ValidationError
-from django.shortcuts import render, get_object_or_404
+from django.forms import inlineformset_factory
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from catalog.forms import ProductForm, VersionForm
@@ -114,7 +114,7 @@ class AddProductCreateView(LoginRequiredMixin, CreateView):
                 form.instance.user = self.request.user
                 self.object = form.save()
                 formset.instance = self.object
-                product = formset.save()
+                formset.save()
                 return super().form_valid(form)
         return super().form_invalid(form)
 

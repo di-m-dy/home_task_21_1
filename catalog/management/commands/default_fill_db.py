@@ -10,9 +10,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE catalog_storecontacts RESTART IDENTITY CASCADE;')
+            cursor.execute('TRUNCATE TABLE catalog_storecontacts RESTART IDENTITY CASCADE;')
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE catalog_category RESTART IDENTITY CASCADE;')
+            cursor.execute('TRUNCATE TABLE catalog_category RESTART IDENTITY CASCADE;')
 
         with open(BASE_DIR / 'default_data/data.json') as file:
             data = json.load(file)
