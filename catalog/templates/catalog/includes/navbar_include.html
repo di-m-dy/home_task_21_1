@@ -33,7 +33,7 @@
                     </li>
                     {% endif %}
                     {% if user.is_authenticated %}
-                    {% if not request.user|has_group:"moderator" %}
+                    {% if not request.user|has_group:"moderator" and not request.user|has_group:"blog_content_manager" %}
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'catalog:add_product' %}">Добавить продукт</a>
                     </li>

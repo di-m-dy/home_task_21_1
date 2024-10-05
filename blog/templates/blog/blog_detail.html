@@ -15,9 +15,12 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
+                            {% if perms.is_superuser or request.user|has_group:"blog_content_manager" %}
                             <div class="my-4">
                                 <a href="{% url 'blog:update_post' object.id %}" type="button" class="btn btn-warning">Редактировать</a>
                             </div>
+                            {% endif %}
+                            {% if perms.is_superuser or request.user|has_group:"blog_content_manager" %}
                             <div class="my-4">
                                 {% if object.is_active %}
                                 <h3>{{ object.title }} <span class="badge text-bg-success">active</span></h3>
@@ -25,6 +28,11 @@
                                 <h3>{{ object.title }} <span class="badge text-bg-danger">hidden</span></h3>
                                 {% endif %}
                             </div>
+                            {% else %}
+                            <div class="my-4">
+                                <h3>{{ object.title }}</h3>
+                            </div>
+                            {% endif %}
                             <div>{{ object.text }}</div>
                             <div class="my-4">
                                 <p class="card-text">

@@ -3,7 +3,19 @@
 Продолжайте работу в проекте предыдущей домашней работы.
 
 ## !!!ВНИМАНИЕ!!! ##
-Перед запуском проекта переименуйте файл [env_template](env_template) в `.env` и поменяйте содержимое на свои переменные окруженния
+### Инструкция перед запуском проекта (порядок выполнения имеет значение)
+1. Перед запуском проекта переименуйте файл [env_template](env_template) в `.env` и поменяйте содержимое на свои переменные окруженния
+2. Выполните миграцию `python manage.py migrate`
+3. Создайте суперпользователя (имеет все права) `python manage.py create_custom_super_user`
+_Логин: admin@example.com Пароль: 1234_
+4. Создайте модератора каталога: `python manage.py create_moderator_user`
+_Логин: moderator@example.com Пароль: 0987_
+5. Создайте контент менеджера блога: `python manage.py create_blog_content_manager_user`
+_Логин: blog_content_manager@example.com Пароль: 12qw34er_
+6. Создайте простого пользователя, продукты которого представлены: `python manage.py create_simple_user`
+_Логин: test@example.com Пароль: 0987_
+7. Заполните базу даных (каталог): `python manage.py fill_data `
+8. Заполните базу даных (каталог): `python manage.py loaddata default_data/blog_data.json`
 
 ## Задание 1
 

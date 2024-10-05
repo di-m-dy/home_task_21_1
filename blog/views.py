@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from pytils.templatetags.pytils_translit import slugify
 from blog.forms import BlogForm
@@ -8,7 +9,7 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 # Create your views here.
 
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
 
     def get_queryset(self):
@@ -23,11 +24,10 @@ class BlogListView(ListView):
         hidden = self.request.GET.get('hidden')
         if hidden:
             data['hidden'] = True
-            print(data)
         return data
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = Blog
 
     def get_object(self, queryset=None):
@@ -37,7 +37,7 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     success_url = reverse_lazy('blog:index')
     form_class = BlogForm
@@ -51,7 +51,7 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     success_url = reverse_lazy('blog:index')
     form_class = BlogForm
@@ -60,6 +60,6 @@ class BlogUpdateView(UpdateView):
         return reverse('blog:post', args=[self.kwargs.get('pk')])
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:index')

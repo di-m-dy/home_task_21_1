@@ -9,7 +9,7 @@ from catalog.models import Category, Product, StoreContacts, UserContacts, Versi
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
 
-class IndexListView(ListView):
+class IndexListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'catalog/index.html'
     context_object_name = 'products'
@@ -42,7 +42,7 @@ class ThanxDetailView(DetailView):
     model = UserContacts
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
 
     def get_queryset(self):
@@ -73,7 +73,7 @@ class ProductListView(ListView):
         return data
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
 
