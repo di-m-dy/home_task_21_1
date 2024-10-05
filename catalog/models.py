@@ -38,6 +38,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_image', verbose_name='Изображение')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена за покупку')
+    is_published = models.BooleanField(verbose_name='Признак публикации', default=False)
     created_at = models.DateTimeField(auto_now=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
@@ -47,6 +48,12 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
+
+        permissions = [
+            ('set_published', 'Can publish product'),
+            ('edit_description', 'Can edit description'),
+            ('change_category_product', 'Can change category of product')
+        ]
 
 
 class StoreContacts(models.Model):

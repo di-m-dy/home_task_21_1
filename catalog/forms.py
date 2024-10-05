@@ -50,3 +50,32 @@ class VersionForm(FormControlMixin, forms.ModelForm):
     class Meta:
         model = Version
         fields = '__all__'
+
+
+class ModeratorProductForm(FormControlMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('category', 'description', 'is_published')
+
+    def clean(self):
+        """
+        Валидация названия и описания продукта на запрещенные слова
+        """
+        stop_words = (
+            'казино',
+            'криптовалюта',
+            'крипта',
+            'биржа',
+            'дешево',
+            'бесплатно',
+            'обман',
+            'полиция',
+            'радар'
+        )
+        data = self.cleaned_data
+        description = data['description']
+        for sw in stop_words:
+            if sw in description.lower():
+                msg = f'В поле ОПИСАНИЕ ПРОДУКТА используется запрещенное слово: {sw}! Отредактируйте ввод'
+                self.add_error("name", msg)
+        return data

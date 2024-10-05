@@ -46,7 +46,8 @@ class ProductAdmin(admin.ModelAdmin):
         'name',
         'description',
         'price',
-        'category'
+        'category',
+        'is_published'
     ]
     list_filter = ['category']
     ordering = ['name']

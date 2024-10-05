@@ -33,8 +33,16 @@
         </div>
         <div class="row m-4 sm justify-content-center">
             {% for item in object_list %}
+            {% if item.product.is_published or perms.is_superuser or request.user|has_group:"moderator" or request.user == item.product.user %}
             <div class="p-2 rounded col-4">
                 <div class="card m-4">
+                    {% if perms.is_superuser or request.user|has_group:"moderator" or request.user == item.product.user %}
+                    {% if not item.product.is_published %}
+                    <div class="card-header card-header-sm text-bg-danger">
+                        Неопубликовано!
+                    </div>
+                    {% endif %}
+                    {% endif %}
                     <img src="{% mymedia item.product.image %}" class="card-img-top" alt="no_image">
                     <div class="card-body">
                         <h5>{{ item.product.name }}</h5>
@@ -55,6 +63,7 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     </div>

@@ -1,8 +1,10 @@
+from django.contrib.auth.models import Permission
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ModeratorProductForm
 from catalog.models import Category, Product, StoreContacts, UserContacts, Version
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
@@ -13,7 +15,7 @@ class IndexListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        data = super().get_queryset().order_by('-created_at')
+        data = super().get_queryset().filter(is_published=True).order_by('-created_at')
         return data[:3]
 
 
@@ -167,6 +169,19 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
                 formset.save()
                 return super().form_valid(form)
         return super().form_invalid(form)
+
+    def get_form_class(self):
+        user = self.request.user
+        moderator_permissions = [
+            user.has_perm("catalog.set_published"),
+            user.has_perm("catalog.edit_description"),
+            user.has_perm("catalog.change_category_product")
+        ]
+        if self.object.user == user:
+            return ProductForm
+        if all(moderator_permissions):
+            return ModeratorProductForm
+        raise PermissionDenied
 
 
 class SuccessAddProductDetailView(DetailView):
