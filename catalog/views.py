@@ -8,6 +8,8 @@ from catalog.forms import ProductForm, VersionForm, ModeratorProductForm
 from catalog.models import Category, Product, StoreContacts, UserContacts, Version
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
+from catalog.services import get_categories
+
 
 class IndexListView(LoginRequiredMixin, ListView):
     model = Product
@@ -67,8 +69,7 @@ class ProductListView(LoginRequiredMixin, ListView):
         category_id = self.request.GET.get('category_id')
         data = super().get_context_data()
         data['object_list'] = [{'product': item, 'version': item.version_set.filter(is_current=True).first()} for item in data['object_list']]
-        categories = Category.objects.all()
-        data['categories'] = categories
+        data['categories'] = get_categories()
         data['category'] = get_object_or_404(Category, id=category_id) if category_id else None
         return data
 
